@@ -186,6 +186,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\VendorsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -193,9 +194,14 @@
     <Compile Include="Migrations\201803092136460_Init.Designer.cs">
       <DependentUpon>201803092136460_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803121509132_Added Vendors.cs" />
+    <Compile Include="Migrations\201803121509132_Added Vendors.Designer.cs">
+      <DependentUpon>201803121509132_Added Vendors.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\PrsDbContext.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Vendor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\JsonMessage.cs" />
   </ItemGroup>
@@ -254,6 +260,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\User\" />
+    <Folder Include="Views\Vendors\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -271,6 +278,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201803092136460_Init.resx">
       <DependentUpon>201803092136460_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803121509132_Added Vendors.resx">
+      <DependentUpon>201803121509132_Added Vendors.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

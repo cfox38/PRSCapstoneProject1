@@ -8,16 +8,17 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 
+
 namespace PrsWebAppProject.Controllers
 {
-    public class UsersController : Controller
+    public class VendorsController : Controller
     {
         private PrsDbContext db = new PrsDbContext();
-        
+
         //List
         public ActionResult List()
         {
-            return Json(db.Users.ToList(), JsonRequestBehavior.AllowGet);
+            return Json(db.Vendors.ToList(), JsonRequestBehavior.AllowGet);
         }
 
         //Get
@@ -27,44 +28,47 @@ namespace PrsWebAppProject.Controllers
             {
                 return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
             }
-            User user = db.Users.Find(id);
-            if (user == null)
+            Vendor vendor = db.Vendors.Find(id);
+            if (vendor == null)
             {
                 return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
             }
-            return Json(user, JsonRequestBehavior.AllowGet); 
+            return Json(vendor, JsonRequestBehavior.AllowGet);
         }
         // Create
-        public ActionResult Create([System.Web.Http.FromBody] User user)
+        public ActionResult Create([System.Web.Http.FromBody] Vendor vendor)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "Model State is not valid"), JsonRequestBehavior.AllowGet);
             }
-            db.Users.Add(user);
+            db.Vendors.Add(vendor);
             try
             {
                 db.SaveChanges();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "User was created,"));
+            return Json(new JsonMessage("Success", "Vendor was created,"));
         }
 
         //Change
-        public ActionResult Change([FromBody] User user)
+        public ActionResult Change([FromBody] Vendor vendor)
         {
-            User user2 = db.Users.Find(user.Id);
-            user2.UserName = user.UserName;
-            user2.Password = user.Password;
-            user2.FirstName = user.FirstName;
-            user2.LastName = user.LastName;
-            user2.Phone = user.Phone;
-            user2.Email = user.Email;
-            user2.IsReviewer = user.IsReviewer;
-            user2.IsAdmin = user.IsAdmin;
-            user2.Active = user.Active;
+            Vendor vendor2 = db.Vendors.Find(vendor.Id);
+            vendor2.Code = vendor.Code;
+            vendor2.Name = vendor.Name;
+            vendor2.Address = vendor.Address;
+            vendor2.City = vendor.City;
+            vendor2.State = vendor.State;
+            vendor2.Zip = vendor.Zip;
+            vendor2.Phone = vendor.Phone;
+            vendor2.Email = vendor.Email;
+            vendor2.IsPreapproved = vendor.IsPreapproved;
+
+
             try
             {
                 db.SaveChanges();
@@ -73,14 +77,14 @@ namespace PrsWebAppProject.Controllers
             {
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "User was changed."));
+            return Json(new JsonMessage("Success", "Vendor was changed."));
         }
 
         //Remove
-        public ActionResult Remove([FromBody] User user)
+        public ActionResult Remove([FromBody] Vendor vendor)
         {
-            User user2 = db.Users.Find(user.Id);
-            db.Users.Remove(user2);
+            Vendor vendor2 = db.Vendors.Find(vendor.Id);
+            db.Vendors.Remove(vendor2);
             try
             {
                 db.SaveChanges();
@@ -89,7 +93,7 @@ namespace PrsWebAppProject.Controllers
             {
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "User was deleted"));
+            return Json(new JsonMessage("Success", "Vendor was deleted"));
         }
     }
 }

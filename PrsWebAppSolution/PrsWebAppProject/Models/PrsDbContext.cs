@@ -12,5 +12,7 @@ namespace PrsWebAppProject.Models
         public PrsDbContext() : base() { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
+
     }
 }
