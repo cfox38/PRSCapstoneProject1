@@ -1,4 +1,6 @@
-﻿using PrsWebAppProject.Models;
+﻿using PrsWebApp.Models;
+using PrsWebAppProject.Models;
+using PrsWebAppProject.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,20 @@ namespace PrsWebAppProject.Controllers
         public ActionResult List()
         {
             return Json(db.Users.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Get(int? id)
+        {
+            if (id == null)
+            {
+                return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+            }
+            User user = db.Users.Find(id);
+            if (user == null)
+            {
+                return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+            }
+            return Json(user, JsonRequestBehavior.AllowGet); 
         }
     }
 }
