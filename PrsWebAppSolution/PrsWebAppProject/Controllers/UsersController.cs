@@ -14,7 +14,13 @@ namespace PrsWebAppProject.Controllers
     public class UsersController : Controller
     {
         private PrsDbContext db = new PrsDbContext();
-        
+
+        public ActionResult Login(string UserName, string Password)
+        {
+            var users = db.Users.Where(u => u.UserName == UserName && u.Password == Password);
+            return Json(users.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
         //List
         public ActionResult List()
         {
