@@ -49,17 +49,8 @@ namespace PrsWebAppProject.Models
         [Required]
         public bool IsPreapproved { get; set; }
 
-        public void Clone(Vendor FromVendor)
-        {
-            Code = FromVendor.Code;
-            Name = FromVendor.Name;
-            Address = FromVendor.Address;
-            City = FromVendor.City;
-            State = FromVendor.State;
-            Zip = FromVendor.Zip;
-            Phone = FromVendor.Phone;
-            Email = FromVendor.Email;
-            IsPreapproved = FromVendor.IsPreapproved;
+        public bool Active { get; set; }
+        public DateTime DateCreated { get; set; }
+
         }
     }
-}

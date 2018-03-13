@@ -46,5 +46,8 @@ namespace PrsWebApp.Models
 
         [Required]
         public bool Active { get; set; }
+
+        [Required]
+        public DateTime DateCreated { get; internal set; }
     }
 }

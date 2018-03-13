@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using Utility;
 
 namespace PrsWebAppProject.Controllers
 {
@@ -17,7 +18,8 @@ namespace PrsWebAppProject.Controllers
         //List
         public ActionResult List()
         {
-            return Json(db.Users.ToList(), JsonRequestBehavior.AllowGet);
+            //return Json(db.Users.ToList(), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = db.Users.ToList() };
         }
 
         //Get
@@ -37,6 +39,7 @@ namespace PrsWebAppProject.Controllers
         // Create
         public ActionResult Create([System.Web.Http.FromBody] User user)
         {
+            user.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "Model State is not valid"), JsonRequestBehavior.AllowGet);
@@ -56,6 +59,7 @@ namespace PrsWebAppProject.Controllers
         public ActionResult Change([FromBody] User user)
         {
             User user2 = db.Users.Find(user.Id);
+            user2.Id = user.Id;
             user2.UserName = user.UserName;
             user2.Password = user.Password;
             user2.FirstName = user.FirstName;

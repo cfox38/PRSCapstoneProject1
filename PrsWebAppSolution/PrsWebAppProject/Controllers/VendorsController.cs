@@ -7,7 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
-
+using Utility;
 
 namespace PrsWebAppProject.Controllers
 {
@@ -18,7 +18,9 @@ namespace PrsWebAppProject.Controllers
         //List
         public ActionResult List()
         {
-            return Json(db.Vendors.ToList(), JsonRequestBehavior.AllowGet);
+            //return Json(db.Vendors.ToList(), JsonRequestBehavior.AllowGet);
+            return new JsonNetResult{ Data = db.Vendors.ToList() };
+
         }
 
         //Get
@@ -38,6 +40,7 @@ namespace PrsWebAppProject.Controllers
         // Create
         public ActionResult Create([System.Web.Http.FromBody] Vendor vendor)
         {
+            vendor.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
                 return Json(new JsonMessage("Failure", "Model State is not valid"), JsonRequestBehavior.AllowGet);
@@ -58,6 +61,7 @@ namespace PrsWebAppProject.Controllers
         public ActionResult Change([FromBody] Vendor vendor)
         {
             Vendor vendor2 = db.Vendors.Find(vendor.Id);
+            vendor2.Id = vendor.Id;
             vendor2.Code = vendor.Code;
             vendor2.Name = vendor.Name;
             vendor2.Address = vendor.Address;
@@ -67,7 +71,8 @@ namespace PrsWebAppProject.Controllers
             vendor2.Phone = vendor.Phone;
             vendor2.Email = vendor.Email;
             vendor2.IsPreapproved = vendor.IsPreapproved;
-
+            vendor2.Active = vendor.Active;
+            vendor2.DateCreated = vendor.DateCreated;
 
             try
             {

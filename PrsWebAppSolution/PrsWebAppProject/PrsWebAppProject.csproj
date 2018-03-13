@@ -184,6 +184,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\PurchaseRequestLineItemsController.cs" />
+    <Compile Include="Controllers\PurchaseRequestsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\VendorsController.cs" />
@@ -198,12 +201,32 @@
     <Compile Include="Migrations\201803121509132_Added Vendors.Designer.cs">
       <DependentUpon>201803121509132_Added Vendors.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803121819413_Added Active and Date Created.cs" />
+    <Compile Include="Migrations\201803121819413_Added Active and Date Created.Designer.cs">
+      <DependentUpon>201803121819413_Added Active and Date Created.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803121907484_Update for Vendor error.cs" />
+    <Compile Include="Migrations\201803121907484_Update for Vendor error.Designer.cs">
+      <DependentUpon>201803121907484_Update for Vendor error.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803131544573_PurchaseRequests.cs" />
+    <Compile Include="Migrations\201803131544573_PurchaseRequests.Designer.cs">
+      <DependentUpon>201803131544573_PurchaseRequests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201803131724132_Purchase Request Line Items.cs" />
+    <Compile Include="Migrations\201803131724132_Purchase Request Line Items.Designer.cs">
+      <DependentUpon>201803131724132_Purchase Request Line Items.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\PrsDbContext.cs" />
+    <Compile Include="Models\PurchaseRequest.cs" />
+    <Compile Include="Models\PurchaseRequestLineItem.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Vendor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\JsonMessage.cs" />
+    <Compile Include="Utility\JsonNetResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -259,6 +282,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Products\" />
+    <Folder Include="Views\PurchaseRequestLineItems\" />
+    <Folder Include="Views\PurchaseRequest\" />
     <Folder Include="Views\User\" />
     <Folder Include="Views\Vendors\" />
   </ItemGroup>
@@ -281,6 +307,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803121509132_Added Vendors.resx">
       <DependentUpon>201803121509132_Added Vendors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803121819413_Added Active and Date Created.resx">
+      <DependentUpon>201803121819413_Added Active and Date Created.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803121907484_Update for Vendor error.resx">
+      <DependentUpon>201803121907484_Update for Vendor error.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803131544573_PurchaseRequests.resx">
+      <DependentUpon>201803131544573_PurchaseRequests.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803131724132_Purchase Request Line Items.resx">
+      <DependentUpon>201803131724132_Purchase Request Line Items.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
