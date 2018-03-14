@@ -20,7 +20,7 @@ namespace PrsWebAppProject.Controllers
         {
             db = new PrsDbContext();
 
-            decimal total = 0;
+           decimal total = 0;
            var PurchaseRequestLineItems = db.PurchaseRequestLineItems.Where(p => p.PurchaseRequestId == prodid);
            foreach (var PurchaseRequestLineItem in PurchaseRequestLineItems)
            {
