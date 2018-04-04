@@ -1,4 +1,5 @@
-﻿using PrsWebApp.Models;
+﻿using PrsCapstoneProject.Utility;
+using PrsWebApp.Models;
 using PrsWebAppProject.Models;
 using PrsWebAppProject.Utility;
 using System;
@@ -15,10 +16,19 @@ namespace PrsWebAppProject.Controllers
     {
         private PrsDbContext db = new PrsDbContext();
 
+        //Get Username and password 
         public ActionResult Login(string UserName, string Password)
         {
-            var users = db.Users.Where(u => u.UserName == UserName && u.Password == Password);
-            return Json(users.ToList(), JsonRequestBehavior.AllowGet);
+            if (UserName == null || Password == null)
+            {
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "Invalid username/password." } };
+            }
+            var user = db.Users.SingleOrDefault(u => u.UserName == UserName && u.Password == Password);
+            if (user == null)
+            {
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "Invalid username/password." } };
+            }
+            return new JsonNetResult { Data = new Msg { Result = "Success", Message = "Login successful.", Data = user } };
         }
 
         //List
@@ -33,22 +43,30 @@ namespace PrsWebAppProject.Controllers
         {
             if (id == null)
             {
-                return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is null") };
+                //return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
             }
             User user = db.Users.Find(id);
             if (user == null)
             {
-                return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is not found") };
+                //return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
             }
-            return Json(user, JsonRequestBehavior.AllowGet); 
+            return new JsonNetResult { Data = user };
         }
-        // Create
-        public ActionResult Create([System.Web.Http.FromBody] User user)
+        // Create [POST]
+        public ActionResult Create([FromBody] User user)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+            //if (user.UserName == null) return new EmptyResult();
             user.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
-                return Json(new JsonMessage("Failure", "Model State is not valid"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Fail", "ModelState invalid", ModelState) };
             }
             db.Users.Add(user);
             try
@@ -56,14 +74,22 @@ namespace PrsWebAppProject.Controllers
                 db.SaveChanges();
             } catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
+                //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "User was created,"));
+            return new JsonNetResult { Data = new JsonMessage("Success", "User was created") };
+            //return Json(new JsonMessage("Success", "User was created,"));
         }
 
         //Change
         public ActionResult Change([FromBody] User user)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+            if (user.UserName == null) return new EmptyResult();
             User user2 = db.Users.Find(user.Id);
             user2.Id = user.Id;
             user2.UserName = user.UserName;
@@ -81,14 +107,22 @@ namespace PrsWebAppProject.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
+                //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "User was changed."));
+            return new JsonNetResult { Data = new JsonMessage("Success", "User was changed") };
+            //return Json(new JsonMessage("Success", "User was changed."));
         }
 
         //Remove
         public ActionResult Remove([FromBody] User user)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+            if (user.UserName == null) return new EmptyResult();
             User user2 = db.Users.Find(user.Id);
             db.Users.Remove(user2);
             try
@@ -97,9 +131,11 @@ namespace PrsWebAppProject.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
+                //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "User was deleted"));
+            return new JsonNetResult { Data = new JsonMessage("Success", "User was deleted") };
+            //return Json(new JsonMessage("Success", "User was deleted"));
         }
     }
 }

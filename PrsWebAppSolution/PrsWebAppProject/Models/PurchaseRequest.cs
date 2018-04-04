@@ -1,4 +1,5 @@
-﻿using PrsWebApp.Models;
+﻿using Newtonsoft.Json;
+using PrsWebApp.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,15 +33,16 @@ namespace PrsWebAppProject.Models
         [Required]
         public string Status { get; set; }
 
-        [Required]
         public decimal Total { get; set; }
 
         public bool Active { get; set; }
+
+        public virtual List<PurchaseRequestLineItem> PurchaseRequestLineItems { get; set; }
 
         [StringLength(80)]
         public string RejectionReason { get; set; }
 
         public DateTime DateCreated { get; set; }
-
+        public object Code { get; internal set; }
     }
 }

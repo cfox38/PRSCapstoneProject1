@@ -1,4 +1,5 @@
-﻿using PrsWebApp.Models;
+﻿using Newtonsoft.Json;
+using PrsWebApp.Models;
 using PrsWebAppProject.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace PrsWebApp.Models
         public int Id { get; set; }
 
         public int PurchaseRequestId { get; set; }
+        [JsonIgnore]
         public virtual PurchaseRequest PurchaseRequest { get; set; }
 
         public int ProductId { get; set; }
@@ -27,5 +29,6 @@ namespace PrsWebApp.Models
 
         public DateTime DateCreated { get; set; }
         public object Products { get; internal set; }
+        //public object Code { get; internal set; }
     }
 } 

@@ -24,7 +24,7 @@ namespace PrsWebAppProject.Models
         public string Name { get; set; }
 
         [Required]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         [StringLength(255)]
         [Required]
@@ -36,6 +36,6 @@ namespace PrsWebAppProject.Models
         public bool Active { get; set; }
 
         public DateTime DateCreated { get; set; }
-
+        public object Code { get; internal set; }
     }
 }

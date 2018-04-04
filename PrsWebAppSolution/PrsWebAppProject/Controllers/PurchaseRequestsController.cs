@@ -8,7 +8,7 @@ using System.Web.Mvc;
 using PrsWebAppProject.Utility;
 using PrsWebAppProject.Models;
 using Utility;
-
+using PrsCapstoneProject.Utility;
 
 namespace PrsWebAppProject.Controllers
 {
@@ -21,20 +21,26 @@ namespace PrsWebAppProject.Controllers
         {
             //return Json(db.PurchaseRequests.ToList(), JsonRequestBehavior.AllowGet);
             return new JsonNetResult { Data = db.PurchaseRequests.ToList() };
-
         }
 
+        //ReviewList
+        public ActionResult ReviewList()
+        {
+            return new JsonNetResult { Data = db.PurchaseRequests.Where(PurchaseRequest => PurchaseRequest.Status == "REVIEW").ToList() };
+        } 
         //Get
         public ActionResult Get(int? id)
         {
             if (id == null)
             {
-                return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is null") };
+                //return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
             }
             PurchaseRequest purchaserequest = db.PurchaseRequests.Find(id);
             if (purchaserequest == null)
             {
-                return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is not found") };
+                //return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
             }
             return new JsonNetResult { Data = db.PurchaseRequests.Find(id) };
             //return Json(purchaserequest, JsonRequestBehavior.AllowGet);
@@ -42,10 +48,16 @@ namespace PrsWebAppProject.Controllers
         // Create
         public ActionResult Create([System.Web.Http.FromBody] PurchaseRequest purchaserequest)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
             purchaserequest.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
-                return Json(new JsonMessage("Failure", "Model State is not valid"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Model State is not valid") };
+                //return Json(new JsonMessage("Failure", "Model State is not valid"), JsonRequestBehavior.AllowGet);
             }
             db.PurchaseRequests.Add(purchaserequest);
             try
@@ -54,14 +66,21 @@ namespace PrsWebAppProject.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
+                //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "Purchase Request was created,"));
+            return new JsonNetResult { Data = new JsonMessage("Success", "Purchase request was created") };
+            //return Json(new JsonMessage("Success", "Purchase Request was created,"));
         }
 
         //Change
         public ActionResult Change([FromBody] PurchaseRequest purchaserequest)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
             PurchaseRequest purchaserequest2 = db.PurchaseRequests.Find(purchaserequest.Id);
             purchaserequest2.Id = purchaserequest.Id;
             purchaserequest2.UserId = purchaserequest.UserId;
@@ -79,14 +98,22 @@ namespace PrsWebAppProject.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "ex.Message") };
+                //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "Purchase Request was changed."));
+            return new JsonNetResult { Data = new JsonMessage("Success", "Purchase request was changed") };
+            //return Json(new JsonMessage("Success", "Purchase Request was changed."));
         }
 
         //Remove
         public ActionResult Remove([FromBody] PurchaseRequest purchaserequest)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+            //if (purchaserequest.Code == null) return new EmptyResult();
             PurchaseRequest purchaserequest2 = db.PurchaseRequests.Find(purchaserequest.Id);
             db.PurchaseRequests.Remove(purchaserequest2);
             try
@@ -95,9 +122,11 @@ namespace PrsWebAppProject.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
+                //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "Purchase Request was deleted"));
+            return new JsonNetResult { Data = new JsonMessage("Success", "Purchase Request was deleted") };
+            //return Json(new JsonMessage("Success", "Purchase Request was deleted"));
         }
     }
 }

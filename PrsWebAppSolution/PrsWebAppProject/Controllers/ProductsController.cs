@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using PrsWebAppProject.Utility;
 using PrsWebAppProject.Models;
 using Utility;
+using PrsCapstoneProject.Utility;
 
 namespace PrsWebAppProject.Controllers
 {
@@ -28,22 +29,33 @@ namespace PrsWebAppProject.Controllers
             {
                 if (id == null)
                 {
-                    return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+                    return new JsonNetResult { Data = new JsonMessage("Failure", "id is null") };
+                    //return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
                 }
                 Product product = db.Products.Find(id);
                 if (product == null)
                 {
-                    return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+                    return new JsonNetResult { Data = new JsonMessage("Failure", "Id is not found" ) };
+                    //return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
                 }
-                return Json(product, JsonRequestBehavior.AllowGet);
-            }
-            // Create
-            public ActionResult Create([System.Web.Http.FromBody] Product product)
+                return new JsonNetResult { Data = product };
+                //return Json(product, JsonRequestBehavior.AllowGet);
+        }
+        // Create
+        public ActionResult Create([System.Web.Http.FromBody] Product product)
             {
-                product.DateCreated = DateTime.Now;
+            ModelState.Remove("DateCreated");
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+
+            product.DateCreated = DateTime.Now;
                 if (!ModelState.IsValid)
                 {
-                    return Json(new JsonMessage("Failure", "Model State is not valid"), JsonRequestBehavior.AllowGet);
+                    return new JsonNetResult { Data = new JsonMessage("Failure", "Model State is not valid" ) };
+                    //return Json(new JsonMessage("Failure", "Model State is not valid"), JsonRequestBehavior.AllowGet);
                 }
                 db.Products.Add(product);
                 try
@@ -52,15 +64,23 @@ namespace PrsWebAppProject.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                    return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
+                    //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
                 }
-                return Json(new JsonMessage("Success", "Product was created,"));
+                return new JsonNetResult { Data = new JsonMessage("Success", "Product was created") };
+                //return Json(new JsonMessage("Success", "Product was created,"));
             }
 
             //Change
             public ActionResult Change([FromBody] Product product)
             {
-                Product product2 = db.Products.Find(product.Id);
+            ModelState.Remove("DateCreated");
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+            Product product2 = db.Products.Find(product.Id);
                 product2.Id = product.Id;
                 product2.VendorId = product.VendorId;
                 product2.VendorPartNumber = product.VendorPartNumber;
@@ -77,15 +97,23 @@ namespace PrsWebAppProject.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                    return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message ) };
+                    //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
                 }
-                return Json(new JsonMessage("Success", "Product was changed."));
+                 return new JsonNetResult { Data = new JsonMessage("Success", "Product was changed") };
+                 //return Json(new JsonMessage("Success", "Product was changed."));
             }
 
             //Remove
             public ActionResult Remove([FromBody] Product product)
             {
-                Product product2 = db.Products.Find(product.Id);
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+            //if (product.Code == null) return new EmptyResult();
+            Product product2 = db.Products.Find(product.Id);
                 db.Products.Remove(product2);
                 try
                 {
@@ -93,9 +121,11 @@ namespace PrsWebAppProject.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
+                //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
                 }
-                return Json(new JsonMessage("Success", "Product was deleted"));
+                return new JsonNetResult { Data = new JsonMessage("Success", "Product was deleted") };
+                //return Json(new JsonMessage("Success", "Product was deleted"));
             }
     }
 }

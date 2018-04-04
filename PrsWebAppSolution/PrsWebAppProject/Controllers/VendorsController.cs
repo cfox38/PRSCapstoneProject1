@@ -1,4 +1,5 @@
-﻿using PrsWebApp.Models;
+﻿using PrsCapstoneProject.Utility;
+using PrsWebApp.Models;
 using PrsWebAppProject.Models;
 using PrsWebAppProject.Utility;
 using System;
@@ -13,6 +14,7 @@ namespace PrsWebAppProject.Controllers
 {
     public class VendorsController : Controller
     {
+
         private PrsDbContext db = new PrsDbContext();
 
         //List
@@ -28,22 +30,28 @@ namespace PrsWebAppProject.Controllers
         {
             if (id == null)
             {
-                return Json(new JsonMessage("Failure", "Id is null"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is null" ) };
             }
             Vendor vendor = db.Vendors.Find(id);
             if (vendor == null)
             {
-                return Json(new JsonMessage("Failure", "Id is not found"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Id is null") };
             }
-            return Json(vendor, JsonRequestBehavior.AllowGet);
+            return new JsonNetResult { Data = vendor };
         }
         // Create
         public ActionResult Create([System.Web.Http.FromBody] Vendor vendor)
         {
+            ModelState.Remove("DateCreated");
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
             vendor.DateCreated = DateTime.Now;
             if (!ModelState.IsValid)
             {
-                return Json(new JsonMessage("Failure", "Model State is not valid"), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", "Model State is not valid") };
             }
             db.Vendors.Add(vendor);
             try
@@ -52,14 +60,23 @@ namespace PrsWebAppProject.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult {Data = new JsonMessage("Failure", ex.Message)};
             }
-            return Json(new JsonMessage("Success", "Vendor was created,"));
+
+            return new JsonNetResult { Data = new JsonMessage("Success", "Vendor was created.") };
         }
 
         //Change
         public ActionResult Change([FromBody] Vendor vendor)
         {
+            ModelState.Remove("DateCreated");
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+
+            if (vendor.Code == null) return new EmptyResult();
             Vendor vendor2 = db.Vendors.Find(vendor.Id);
             vendor2.Id = vendor.Id;
             vendor2.Code = vendor.Code;
@@ -80,14 +97,22 @@ namespace PrsWebAppProject.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) }; 
             }
-            return Json(new JsonMessage("Success", "Vendor was changed."));
+            return new JsonNetResult { Data = new JsonMessage("Success", "Vendor was changed.") };
         }
+
 
         //Remove
         public ActionResult Remove([FromBody] Vendor vendor)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelStateErrors.GetModelStateErrors(ModelState);
+                return new JsonNetResult { Data = new Msg { Result = "Failed", Message = "ModelState invalid.", Data = errorMessages } };
+            }
+
+            if (vendor.Code == null) return new EmptyResult();
             Vendor vendor2 = db.Vendors.Find(vendor.Id);
             db.Vendors.Remove(vendor2);
             try
@@ -96,9 +121,11 @@ namespace PrsWebAppProject.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+                return new JsonNetResult { Data = new JsonMessage("Failure", ex.Message) };
+                //return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
-            return Json(new JsonMessage("Success", "Vendor was deleted"));
+                return new JsonNetResult { Data = new JsonMessage("Success", "Vendor was deleted") };
+                //return Json(new JsonMessage("Success", "Vendor was deleted"));
         }
     }
 }
